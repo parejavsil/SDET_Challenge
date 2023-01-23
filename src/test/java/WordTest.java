@@ -21,11 +21,9 @@ public class WordTest {
     private DictionaryService dictionaryService;
     List<String> dictionaryList;
 
-
-    /*
-     * Create a list of words based on the EnglishDictionaryWords file in order to mock the dictionary service
-     *
-     * @return list of Strings with the content of the dictionary
+    /**
+     * Creates a list of words based on the EnglishDictionaryWords file in order to mock the dictionary service
+     * @return the list of the dictionary that we want to mock
      */
     static List<String> createDictionaryArray() {
         List<String> dictionaryList = new ArrayList<String>();
@@ -47,10 +45,10 @@ public class WordTest {
         return dictionaryList;
     }
 
-
-    /*
+    /**
      * Validate if given word exists in the dictionary (EnglishWords in this case) to mock the isEnglishWord function
-     * @param word
+     *
+     * @param word This is the word that we want to verify if exist in the dictionary
      * @return boolean based if the word was found in the dictionary
      */
     public boolean isThisEnglishWord(String word) {
@@ -68,17 +66,16 @@ public class WordTest {
     @Before
     public void setUp() {
         dictionaryService = mock(DictionaryImpl.class);
-
         when(dictionaryService.getEnglishDictionary()).thenReturn(createDictionaryArray());
         dictionaryList = dictionaryService.getEnglishDictionary();
     }
 
     @Test
-    public void validateWorkingWord () {
-        DictionaryImpl dictionary= new DictionaryImpl();
+    public void validateWorkingWord() {
+        DictionaryImpl dictionary = new DictionaryImpl();
 
-        String wordInput="ajiac";
+        String wordInput = "<INSERT HERE THE WORD>";
         when(dictionaryService.isEnglishWord(wordInput)).thenReturn(isThisEnglishWord(wordInput));
-        System.out.println(dictionary.findEnglishWords(dictionaryList,wordInput));
+        System.out.println(dictionary.findEnglishWords(dictionaryList, wordInput));
     }
 }
