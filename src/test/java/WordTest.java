@@ -8,9 +8,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,11 +21,13 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class WordTest {
 
-    private DictionaryService dictionaryService;
+    DictionaryService dictionaryService;
+    DictionaryImpl dictionary = new DictionaryImpl();
     List<String> dictionaryList;
 
     /**
      * Creates a list of words based on the EnglishDictionaryWords file in order to mock the dictionary service
+     *
      * @return the list of the dictionary that we want to mock
      */
     static List<String> createDictionaryArray() {
@@ -59,7 +64,6 @@ public class WordTest {
                 System.out.println(word + " is a valid english word");
             }
         }
-        if (!isAnEnglishWord) System.out.println(word + " is not a valid english word");
         return isAnEnglishWord;
     }
 
@@ -71,11 +75,31 @@ public class WordTest {
     }
 
     @Test
-    public void validateWorkingWord() {
-        DictionaryImpl dictionary = new DictionaryImpl();
-
-        String wordInput = "<INSERT HERE THE WORD>";
+    public void printCollectionOfWords() {
+        String wordInput = "hell";
         when(dictionaryService.isEnglishWord(wordInput)).thenReturn(isThisEnglishWord(wordInput));
         System.out.println(dictionary.findEnglishWords(dictionaryList, wordInput));
+    }
+
+    @Test
+    public void validateIsThisEnglishWordMethod() {
+        String word = "tip";
+        assertTrue("The word " + word.toLowerCase() + " is not in english", isThisEnglishWord(word));
+    }
+
+    @Test
+    public void validateIsEnglishWord() {
+        String word = "Train";
+        when(dictionaryService.isEnglishWord(word)).thenReturn(isThisEnglishWord(word));
+        assertTrue("The word " + word.toLowerCase() + " is not in english", dictionaryService.isEnglishWord(word));
+    }
+
+    @Test
+    public void validateRawCollectionOfWordsGenerated() {
+        String word = "raw";
+        System.out.println(dictionary.findEnglishWords(dictionaryList, word));
+        assertEquals("The collection is not the expected.",
+                Arrays.asList("r", "a", "w", "ar", "wr", "ra", "aa", "wa", "aw", "arr", "war", "ara", "aaa", "awa", "raw", "waw"),
+                (dictionary.findEnglishWords(dictionaryList, word)));
     }
 }

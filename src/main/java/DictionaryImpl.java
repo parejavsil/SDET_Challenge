@@ -1,6 +1,9 @@
+import jdk.jshell.spi.ExecutionControl;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DictionaryImpl implements DictionaryService {
 
@@ -9,7 +12,13 @@ public class DictionaryImpl implements DictionaryService {
     }
 
     public boolean isEnglishWord(String word) {
-        return false;
+        //return false;
+        try {
+            throw new ExecutionControl.NotImplementedException("This is not implemented");
+        } catch (ExecutionControl.NotImplementedException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -20,9 +29,9 @@ public class DictionaryImpl implements DictionaryService {
      * @return The method returns all the possible word permutations
      */
 
-    public List<String> getAllPossibleCombinations(int length, String word) {
+    private List<String> getAllPossibleCombinations(int length, String word) {
         final char[] chars = word.toLowerCase().toCharArray();
-        final double NUMBER_OF_PERMUTATIONS = Math.pow(chars.length, length);
+        final double numberOfPermutations = Math.pow(chars.length, length);
 
         List<String> words = new ArrayList<>();
 
@@ -31,7 +40,7 @@ public class DictionaryImpl implements DictionaryService {
 
         int i = 0;
 
-        while (i < NUMBER_OF_PERMUTATIONS) {
+        while (i < numberOfPermutations) {
             int n = i;
             for (int k = 0; k < length; k++) {
                 temporal[k] = chars[n % chars.length];
@@ -47,8 +56,9 @@ public class DictionaryImpl implements DictionaryService {
     /**
      * Find all the possible english words (based on our mocked dictionary) that can be written with the letters
      * or the input word
+     *
      * @param englishDictionary this is the english dictionary that is mocked
-     * @param word the word with the letters with which we will find for the possible words
+     * @param word              the word with the letters with which we will find for the possible words
      * @return a list with all possible words than can be written
      */
     public List<String> findEnglishWords(List<String> englishDictionary, String word) {
@@ -59,6 +69,7 @@ public class DictionaryImpl implements DictionaryService {
             foundWords = getAllPossibleCombinations(i, word);
             foundWords.retainAll(englishDictionary);
             finalList.addAll(foundWords);
+            finalList = finalList.stream().distinct().collect(Collectors.toList());
         }
         return finalList;
     }
